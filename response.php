@@ -621,7 +621,8 @@ if($action == 'update_product') {
 
 // Adding new product
 if($action == 'update_invoice') {
-
+	// echo json_encode($_POST);
+	// exit;
 	// output any connection error
 	if ($mysqli->connect_error) {
 	    die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
@@ -631,7 +632,7 @@ if($action == 'update_invoice') {
 
 	// the query
 	$query = "DELETE FROM invoices WHERE invoice = ".$id.";";
-	//$query .= "DELETE FROM customers WHERE invoice = ".$id.";";
+	$query .= "DELETE FROM customers WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM invoice_items WHERE invoice = ".$id.";";
 	$filePath = $_SERVER['DOCUMENT_ROOT'] . '/invoices/' . $id . '.pdf';
 		
@@ -674,7 +675,8 @@ if($action == 'update_invoice') {
 
 	// insert invoice into database
 	$query .= "INSERT INTO invoices (
-					invoice, 
+					invoice,
+					custom_email,
 					invoice_date, 
 					invoice_due_date, 
 					subtotal, 
@@ -687,6 +689,7 @@ if($action == 'update_invoice') {
 					status
 				) VALUES (
 				  	'".$invoice_number."',
+					'".$custom_email."',
 				  	'".$invoice_date."',
 				  	'".$invoice_due_date."',
 				  	'".$invoice_subtotal."',
@@ -702,7 +705,6 @@ if($action == 'update_invoice') {
 	// insert customer details into database
 	$query .= "INSERT INTO customers (
 					invoice,
-					custom_email,
 					name,
 					email,
 					address_1,
@@ -719,7 +721,6 @@ if($action == 'update_invoice') {
 					postcode_ship
 				) VALUES (
 					'".$invoice_number."',
-					'".$custom_email."',
 					'".$customer_name."',
 					'".$customer_email."',
 					'".$customer_address_1."',
@@ -780,7 +781,7 @@ if($action == 'update_invoice') {
 		//Include Invoicr class
 		include('invoice.php');
 		//Create a new instance
-		$invoice = new invoicr("A4",CURRENCY,"en");
+		$invoice = new invoicr("A4",'Rs',"en");
 		//Set number formatting
 		$invoice->setNumberFormat('.',',');
 		//Set your logo
