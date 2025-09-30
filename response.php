@@ -448,8 +448,12 @@ if($action == 'delete_invoice') {
 	$query = "DELETE FROM invoices WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM customers WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM invoice_items WHERE invoice = ".$id.";";
-	if(file_exists('/invoices/'.$id.'.pdf')){
-		unlink('/invoices/'.$id.'.pdf');
+
+	
+	$filePath = $_SERVER['DOCUMENT_ROOT'] . '/invoices/' . $id . '.pdf';
+		
+	if (file_exists($filePath)) {
+		unlink($filePath);
 	}
 
 	if($mysqli -> multi_query($query)) {
@@ -629,8 +633,10 @@ if($action == 'update_invoice') {
 	$query = "DELETE FROM invoices WHERE invoice = ".$id.";";
 	//$query .= "DELETE FROM customers WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM invoice_items WHERE invoice = ".$id.";";
-	if(file_exists('/invoices/'.$id.'.pdf')){
-		unlink('/invoices/'.$id.'.pdf');
+	$filePath = $_SERVER['DOCUMENT_ROOT'] . '/invoices/' . $id . '.pdf';
+		
+	if (file_exists($filePath)) {
+		unlink($filePath);
 	}
 
 	// invoice customer information
