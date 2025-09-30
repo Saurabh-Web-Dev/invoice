@@ -448,8 +448,9 @@ if($action == 'delete_invoice') {
 	$query = "DELETE FROM invoices WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM customers WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM invoice_items WHERE invoice = ".$id.";";
-
-	unlink('invoices/'.$id.'.pdf');
+	if(file_exists('/invoices/'.$id.'.pdf')){
+		unlink('/invoices/'.$id.'.pdf');
+	}
 
 	if($mysqli -> multi_query($query)) {
 	    //if saving success
@@ -628,8 +629,9 @@ if($action == 'update_invoice') {
 	$query = "DELETE FROM invoices WHERE invoice = ".$id.";";
 	//$query .= "DELETE FROM customers WHERE invoice = ".$id.";";
 	$query .= "DELETE FROM invoice_items WHERE invoice = ".$id.";";
-
-	unlink('invoices/'.$id.'.pdf');
+	if(file_exists('/invoices/'.$id.'.pdf')){
+		unlink('/invoices/'.$id.'.pdf');
+	}
 
 	// invoice customer information
 	// billing
