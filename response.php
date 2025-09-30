@@ -14,48 +14,60 @@ if ($mysqli->connect_error) {
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 
 if ($action == 'email_invoice'){
+	require 'vendor/autoload.php';
 
-	$fileId = $_POST['id'];
-	$emailId = $_POST['email'];
+	$fileId       = $_POST['id'];
+	$emailId      = 'innosec.suarabh@gmail.com';
+	// $emailId      = $_POST['email'];
 	$invoice_type = $_POST['invoice_type'];
 	$custom_email = $_POST['custom_email'];
 
-	require_once('class.phpmailer.php');
+	$mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
-	$mail = new PHPMailer(); // defaults to using php "mail()"
+	try {
+		// $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+		$mail->isSMTP();
+		$mail->Host       = SMTPHOST;
+		$mail->SMTPAuth   = SMTPAUTH;
+		$mail->Username   = SMTPUSERNAME;
+		$mail->Password   = SMTPPASSWORD;
+		$mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+		$mail->Port       = SMTPPORT;
+		// Recipients
+		$mail->setFrom(EMAIL_FROM, EMAIL_NAME);
+		$mail->addAddress($emailId);
+		$mail->addReplyTo(EMAIL_FROM, EMAIL_NAME);
 
-	$mail->AddReplyTo(EMAIL_FROM, EMAIL_NAME);
-	$mail->SetFrom(EMAIL_FROM, EMAIL_NAME);
-	$mail->AddAddress($emailId, "");
+		// Content
+		$mail->isHTML(true);
+		$mail->Subject = EMAIL_SUBJECT;
 
-	$mail->Subject = EMAIL_SUBJECT;
-	//$mail->AltBody = EMAIL_BODY; // optional, comment out and test
-	if (empty($custom_email)){
-		if($invoice_type == 'invoice'){
-			$mail->MsgHTML(EMAIL_BODY_INVOICE);
-		} else if($invoice_type == 'quote'){
-			$mail->MsgHTML(EMAIL_BODY_QUOTE);
-		} else if($invoice_type == 'receipt'){
-			$mail->MsgHTML(EMAIL_BODY_RECEIPT);
+		if (empty($custom_email)) {
+			if ($invoice_type == 'invoice') {
+				$mail->Body = EMAIL_BODY_INVOICE;
+			} elseif ($invoice_type == 'quote') {
+				$mail->Body = EMAIL_BODY_QUOTE;
+			} elseif ($invoice_type == 'receipt') {
+				$mail->Body = EMAIL_BODY_RECEIPT;
+			}
+		} else {
+			$mail->Body = $custom_email;
 		}
-	} else {
-		$mail->MsgHTML($custom_email);
-	}
 
-	$mail->AddAttachment("./invoices/".$fileId.".pdf"); // attachment
+		// Attachment
+		$mail->addAttachment("./invoices/" . $fileId . ".pdf");
 
-	if(!$mail->Send()) {
-		 //if unable to create new record
-	    echo json_encode(array(
-	    	'status' => 'Error',
-	    	//'message'=> 'There has been an error, please try again.'
-	    	'message' => 'There has been an error, please try again.<pre>'.$mail->ErrorInfo.'</pre>'
-	    ));
-	} else {
-	   echo json_encode(array(
-			'status' => 'Success',
-			'message'=> 'Invoice has been successfully send to the customer'
-		));
+		$mail->send();
+		echo json_encode([
+			'status'  => 'Success',
+			'message' => 'Invoice has been successfully sent to the customer'
+		]);
+
+	} catch (Exception $e) {
+		echo json_encode([
+			'status'  => 'Error',
+			'message' => 'There has been an error, please try again. <pre>' . $mail->ErrorInfo . '</pre>'
+		]);
 	}
 
 }

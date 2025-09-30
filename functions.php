@@ -58,7 +58,20 @@ function getInvoices() {
 				}
 
 			print '
-				    <td><a href="invoice-edit.php?id='.$row["invoice"].'" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> <a href="#" data-invoice-id="'.$row['invoice'].'" data-email="'.$row['email'].'" data-invoice-type="'.$row['invoice_type'].'" data-custom-email="'.$row['custom_email'].'" class="btn btn-success btn-xs email-invoice"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a> <a href="invoices/'.$row["invoice"].'.pdf" class="btn btn-info btn-xs" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a> <a data-invoice-id="'.$row['invoice'].'" class="btn btn-danger btn-xs delete-invoice"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+				    <td>
+						<a href="invoice-edit.php?id='.$row["invoice"].'" class="btn btn-primary btn-xs">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+						<a href="#" data-invoice-id="'.$row['invoice'].'" data-email="'.$row['email'].'" data-invoice-type="'.$row['invoice_type'].'" data-custom-email="'.$row['custom_email'].'" class="btn btn-success btn-xs email-invoice">
+							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+						</a>
+						<a href="invoices/'.$row["invoice"].'.pdf" class="btn btn-info btn-xs" target="_blank">
+							<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+						</a>
+						<a data-invoice-id="'.$row['invoice'].'" class="btn btn-danger btn-xs delete-invoice">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</a>
+					</td>
 			    </tr>
 			';
 

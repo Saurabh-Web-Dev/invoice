@@ -585,11 +585,14 @@ $(document).ready(function() {
    	function emailInvoice(invoiceId) {
 
         jQuery.ajax({
-
         	url: 'response.php',
             type: 'POST', 
             data: invoiceId,
-            dataType: 'json', 
+            dataType: 'json',
+			beforeSend: function () {
+				// Show loader
+				$("#loader").show();
+			},
             success: function(data){
 				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
 				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
@@ -599,7 +602,11 @@ $(document).ready(function() {
 				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
 				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
 				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			} 
+			},
+			complete: function () {
+				// Hide loader
+				$("#loader").hide();
+			}
     	});
 
    	}
